@@ -53,7 +53,7 @@ def schema_interpreter(schema_file):
 
         # split reformatted lines into substrings
         for sub_string in sch.split(" "):
-            if sub_string is '#':
+            if sub_string[0] is '#':
                 break
             if sub_string.__contains__("width"):
                 search_flag = True
