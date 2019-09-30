@@ -24,11 +24,14 @@ def store_checkout(inventory_tuple_list, item_purchase_list):
         5 + 5 + 10 + 0 = 20
     """
     total = 0
+    pricing_dictionary = {}
+    for tuple in inventory_tuple_list:
+        pricing_dictionary[tuple[0]] = tuple[1]
 
-    for purchase_item in item_purcahse_list:
-        for inventory_list in inventory_tuple_list:
-            if purchase_item is inventory_list[0]:
-                total += inventory_list[1]
+    for purchase_item in item_purchase_list:
+        if pricing_dictionary.__contains__(purchase_item):
+            total += pricing_dictionary[purchase_item]
+
     return total
 
 
@@ -47,16 +50,12 @@ def highest_frequency_count(item_list):
         In the example, "A" and "B" each appear 3 times, while "C" appears
         only 1 time. Therefore, expected return value would be 3.
     """
-    return_list = []
+    return_list = {}
 
     for item in item_list:
-        flag = True
-        for return_value in return_list:
-            if item is return_value[0]:
-                return_value[1] += 1
-                flag = False
+        if return_list.__contains__(item):
+            return_list[item] = return_list[item] + 1
+        else:
+            return_list[str(item)] = 1
 
-        if flag:
-            return_list.append([item, 1])
-
-    return (sorted(return_list, key=lambda x: x[1], reverse=True))[0][1]
+    return (sorted(return_list.items(), key=lambda x: x[1], reverse=True))[0][1]
