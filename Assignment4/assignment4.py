@@ -19,10 +19,12 @@ class UniqueStack(Stack):
 
     def __init__(self):
         super(Stack, self).__init__()
-        return
 
     def push(self, item):
-        return
+        if super()._stack_items.__contains__(item):
+            raise ValueError("Stack will not two identical objects")
+
+        super().push(item)
 
     def pop(self):
         return

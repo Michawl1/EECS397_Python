@@ -1,6 +1,31 @@
-from stack import Stack
+import unittest
+from assignment4 import UniqueStack as uni
+from assignment4 import LimitedStack as lim
+from assignment4 import RotatingStack as rot
 
-class UniqueStack(Stack):
+
+class UniqueStackTestCase(unittest.TestCase):
+    ITEM_1 = "item1"
+    ITEM_2 = "item2"
+    ITEM_3 = "item3"
+
+    def test_push(self):
+        test_unique = uni()
+        test_unique.push(UniqueStackTestCase.ITEM_1)
+        test_unique.push(None)
+
+        self.assertEqual(1, 1)
+
+
+if __name__ == '__main__':
+    unittest.main()
+
+'''
+class UniqueStack(Stack, unittest.TestCase):
+    ITEM_1 = "item1"
+    ITEM_2 = "item2"
+    ITEM_3 = "item3"
+
     """
     UniqueStack has the same methods and functionality as Stack, but will only store one
     copy of a particular item at a time.
@@ -15,8 +40,15 @@ class UniqueStack(Stack):
 
     Hint: One option to implement this is to maintain an internal set() alongside the internal list.
     """
-    # Add mehods here. Remove this comment and the next line before doing so.
-    pass
+
+    def test_push(self):
+        test_unique = UniqueStack()
+        test_unique.push(UniqueStack.ITEM_1)
+        test_unique.push(None)
+
+        print(test_unique._stack_items)
+        self.assertEqual(1, 1)
+
 
 class LimitedStack(Stack):
     """
@@ -43,6 +75,7 @@ class LimitedStack(Stack):
     # Add mehods here. Remove this comment and the next line before doing so.
     pass
 
+
 class RotatingStack(LimitedStack):
     """
     A RotatingStack has the same methods and functionality as LimitedStack, but will not raise an
@@ -66,3 +99,4 @@ class RotatingStack(LimitedStack):
 
     # Add mehods here. Remove this comment and the next line before doing so.
     pass
+    '''
