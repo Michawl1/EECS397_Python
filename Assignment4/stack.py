@@ -2,6 +2,7 @@ class Stack:
     """
     See Stack data structure description here: https://en.wikipedia.org/wiki/Stack_(abstract_data_type)
     """
+
     def __init__(self):
         self._stack_items = []
 

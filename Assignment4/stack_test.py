@@ -1,6 +1,7 @@
 import unittest
 from stack import Stack
 
+
 class StackTestCase(unittest.TestCase):
     ITEM_1 = "item1"
     ITEM_2 = "item2"

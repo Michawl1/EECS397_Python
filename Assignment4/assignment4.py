@@ -2,87 +2,93 @@ from stack import Stack
 
 
 class UniqueStack(Stack):
-    """
-    UniqueStack has the same methods and functionality as Stack, but will only store one
-    copy of a particular item at a time.
-
-    If push is called with an item that is already in the UniqueStack, a ValueError should be raised
-    with an appropriate error message.
-
-    If push is called where item equals None, a TypeError should be raised like in the base class.
-
-    Define and implement the relevant methods from the base Stack class to enable the behavior
-    described above. New versions of __init__(), push(), and pop() should be sufficient.
-
-    Hint: One option to implement this is to maintain an internal set() alongside the internal list.
-    """
-
     def __init__(self):
-        super(Stack, self).__init__()
+        """
+        A unique stack is a stack that will only store 1 copy of a particular item
+        """
+        super(UniqueStack, self).__init__()
+        self._item_set = set()
 
     def push(self, item):
-        if super()._stack_items.__contains__(item):
+        """
+        adds a new item to the stack only if the new item is unique to the stack, also adds the item to
+        :param item: new item to be added to the stack
+        :raises TypeError: if item is None
+        :raises ValueError: if item is already in the stack
+        """
+        if self._item_set.__contains__(item):
             raise ValueError("Stack will not two identical objects")
-
+        self._item_set.add(item)
         super().push(item)
 
     def pop(self):
-        return
+        """
+        removes the top item from the stack
+        :return: the item from the stack
+        """
+        if len(self._item_set) > 0:
+            self._item_set.remove(super().peek())
+        return super().pop()
 
 
 class LimitedStack(Stack):
-    """
-    A LimitedStack has the same methods and functionality as Stack, but will only hold up to a certain
-    number of items.
-
-    The __init__ method for LimitedStack should take a single, positive integer as an argument. This will
-    be the maximum number of items that the LimitedStack can hold. If push is called with an item and that
-    item would go beyond the LimitedStack's capacity, the item is not added to the LimitedStack and a
-    LimitedStack.LimitedStackOverflowError should be raised.
-
-    If push is called where item equals None, a TypeError should be raised like in the base class.
-
-    If __init__ is called with a non-integer argument, a TypeError should be raised.
-    If __init__ is called with an int <= 0, a ValueError should be raised.
-
-    Define and implement the relevant methods from the base Stack class to enable the behavior
-    described above. New versions of __init__() and push() should be sufficient.
-    """
-
     def __init__(self, capacity):
+        """
+        A limit stack is a stack with a maximum capacity.
+        If the stack size is at capacity, adding a new item will raise LimitedStackOverflowError
+        :param capacity: the capacity of the stack
+        :raises TypeError: if capacity is not an int
+        :raises ValueError: if capacity < 0
+        """
+        if type(capacity) is not int:
+            raise TypeError("capacity must be of type int")
+
+        if capacity <= 0:
+            raise ValueError("capacity must be greater than 0")
+
         super(LimitedStack, self).__init__()
         self._capacity = capacity
 
     def push(self, item):
-        return
+        """
+        adds a new item to the stack only if the stack isn't full
+        :param item: new item to be added to the stack
+        :raises TypeError: if item is None
+        :raises LimitedStackOverflowError: if you are trying to add an item past the capacity of the stack
+        """
+        if len(self._stack_items) is self._capacity:
+            raise LimitedStack.LimitedStackOverflowError("Stack is at capacity")
+
+        super().push(item)
 
     class LimitedStackOverflowError(Exception):
         pass
 
 
 class RotatingStack(LimitedStack):
-    """
-    A RotatingStack has the same methods and functionality as LimitedStack, but will not raise an
-    exception when an item is added that would go beyond the maximum capacity. Instead, the item
-    will be added to the stack and then the oldest item from the RotatingStack will be dropped.
-
-    The __init__ method for RotatingStack should take a single, positive integer as an argument. This will
-    be the maximum number of items that the RotatingStack can hold. If push is called with an item and that
-    item would go beyond the Rotating's capacity, the item will be added to the stack, but only after
-    discarding the oldest item in the stack.
-
-    If push is called where item equals None, a TypeError should be raised like in the base class.
-
-    If __init__ is called with a non-integer argument, a TypeError should be raised.
-    If __init__ is called with an int <= 0, a ValueError should be raised.
-
-    Define and implement the relevant methods from the base Stack class to enable the behavior
-    described above. As long as LimitedStack has properly handled the __init__ method functionality,
-    only a new version of push() should be needed.
-    """
-
     def __init__(self, capacity):
+        """
+        A rotating stack is a stack with a maximum capacity.
+        If the stack size is at capacity, adding a new item will remove the oldest item from the stack to make room for
+        the new item.
+        :param capacity: the capacity of the stack
+        :raises TypeError: if item is None
+        :raises TypeError: if capacity is not an int
+        :raises ValueError: if capacity < 0
+        """
         super(RotatingStack, self).__init__(capacity)
+        self._capacity = capacity
 
     def push(self, item):
-        return
+        """
+        adds a new item to the stack, removes the oldest item if the stack is at capacity
+        :param item: new item to be added to the stack
+        :raises TypeError: if item is None
+        """
+        if item is None:
+            raise TypeError("item cannot be type None")
+
+        if len(self._stack_items) is self._capacity:
+            del self._stack_items[:-1]
+
+        self._stack_items.append(item)
