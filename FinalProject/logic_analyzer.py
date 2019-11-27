@@ -5,6 +5,7 @@ import tkinter.ttk as ttk
 import resources.constants
 import frames.connect
 import frames.data
+import frames.request_data
 
 class LogicAnalyzerGui:
     def __init__(self):
@@ -26,6 +27,9 @@ class LogicAnalyzerGui:
         self._root.destroy()
 
     def _control_frame(self):
+        """
+        Set up the side window that will have all the buttons to control the logic analyzer
+        """
         control_frame = ttk.Frame(self._root)
         control_frame.pack(expand=False,
                            fill='both',
@@ -35,8 +39,12 @@ class LogicAnalyzerGui:
                            pady=2)
 
         self._connect = frames.connect.Connect(control_frame, 0, 0, self._ser)
+        self._data = frames.request_data.RequestData(control_frame, 1, 0, self._ser)
 
     def _display_frame(self):
+        """
+        Set up a tabbed display window to show data
+        """
         display_frame = ttk.Frame(self._root)
         display_frame.pack(expand=True,
                            fill='both',

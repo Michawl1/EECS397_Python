@@ -4,6 +4,7 @@ import tkinter
 import tkinter.messagebox as messagebox
 import tkinter.ttk as ttk
 import resources.constants
+import struct
 
 
 class Connect(object):
@@ -17,9 +18,7 @@ class Connect(object):
         self._column = column
         self._serial = ser
 
-        self._events = {event: dict() for event in ['connect', 'disconnect']}
-
-        self._frame = ttk.LabelFrame(parent)
+        self._frame = ttk.LabelFrame(self._parent)
         self._frame.configure(text='Connect')
         self._frame.grid(row=self._row,
                          column=self._column,
@@ -28,7 +27,7 @@ class Connect(object):
                          pady=2,
                          ipadx=5,
                          ipady=5)
-        self._button = tkinter.Button(self._frame, text="Connect", command=self.connect)
+        self._button = tkinter.Button(self._frame, text="Connect", command=self._connect)
         self._button.grid(row=0, column=0, sticky='we', padx=2, pady=2)
 
         self._baudrate_control()
@@ -42,11 +41,19 @@ class Connect(object):
         else:
             self.enable()
 
-    def connect(self):
+    def _connect(self):
+        """
+        This sends the connect message to the logic analyzer
+        """
         self._open_com_port()
 
-    def disconnect(self):
-        return
+        # for now all we'll do is send a command, later there will be a response
+        self._serial.write(struct.pack("<BBBB",
+                                       resources.constants.BYTE1,
+                                       resources.constants.BYTE2,
+                                       resources.constants.BYTE3,
+                                       resources.constants.BYTE4)
+                           )
 
     def _open_com_port(self):
         """
@@ -68,6 +75,9 @@ class Connect(object):
                                 icon='warning')
 
     def _baudrate_control(self):
+        """
+        Sets up the drop down menu for the baudrates
+        """
         baudrate_list = self._serial.BAUDRATES
 
         self._baudrate_var = tkinter.StringVar(self._frame)
@@ -84,6 +94,9 @@ class Connect(object):
                                      padx=2, pady=2)
 
     def _com_port_selector(self):
+        """
+        Sets up the drop down menu for the available com ports
+        """
         com_ports = []
         com_port_list = serial.tools.list_ports.comports()
         for port in com_port_list:
@@ -103,11 +116,17 @@ class Connect(object):
                                      padx=2, pady=2)
 
     def disable(self):
+        """
+        Disables the connect button
+        """
         self._button.configure(text='Disconnect')
         self._com_port_combobox.configure(state=tkinter.DISABLED)
         self._baudrate_combobox.configure(state=tkinter.DISABLED)
 
     def enable(self):
+        """
+        Enables the connect button
+        """
         self._button.configure(text="Connect")
         self._com_port_combobox.configure(state=tkinter.NORMAL)
         self._baudrate_combobox.configure(state=tkinter.NORMAL)
